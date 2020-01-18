@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import {FaArrowLeft, FaArrowRight} from 'react-icons/fa';
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+
+
+const validationSchema = Yup.object({
+    medicalInsType: Yup.string().required("Required"),
+    hasInsurance: Yup.string().required("Required"),
+    childCareType: Yup.string().required("Required"),
+    employeeType: Yup.string().required("Required"),
+    primaryDoctor: Yup.string().required("Required")
+});
 
 export default class ThirdCreateFormScreen extends Component {
 
@@ -9,7 +20,7 @@ export default class ThirdCreateFormScreen extends Component {
         this.state = {
             form3: {
                 medicalInsType: '',
-                insuranceHave: '',
+                hasInsurance: '',
                 childCareType: '',
                 employeeType: '',
                 primaryDoctor: '',
@@ -17,30 +28,26 @@ export default class ThirdCreateFormScreen extends Component {
             }
 
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
         this.next = this.next.bind(this);
         this.previous = this.previous.bind(this);
     }
 
-    onSubmit(event) {
-        event.preventDefault();
-        //this.props.handler(this.state);
-    }
-    next(event) {
-        event.preventDefault();
+    handleAction(values) {
+        let action = values['action'];
+        delete values['action'];
+        this.setState({form3: values});
         this.props.handler(this.state);
+        if(action === -1){
+            this.previous()
+        } else {
+            this.next();
+        }
+    }
+    next() {
         this.props.changeButton(3);
     }
-    previous(event){
-        event.preventDefault();
+    previous(){
         this.props.changeButton(1);
-    }
-
-    handleChange(propertyName, event) {
-        const contact = this.state.form3;
-        contact[propertyName] = event.target.value;
-        this.setState({ form3: contact });
     }
 
     render() {
@@ -48,50 +55,87 @@ export default class ThirdCreateFormScreen extends Component {
             <Row className="w-100">
                 <Col>
                     <h3 className="text-center">Third Step</h3>
-                    <Form onSubmit={this.onSubmit} className="d-flex flex-column justify-content-center">
-                        <Form.Control as="select" name="insurancehave" value={this.state.form3.insuranceHave} onChange={this.handleChange.bind(this, 'insuranceHave')} className="input-create-control mb-3">
-                            <option value="" selected disabled hidden>Do you have insurance?</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </Form.Control>
-                        <Form.Control as="select" name="primaryDoctor" value={this.state.form3.primaryDoctor} onChange={this.handleChange.bind(this, 'primaryDoctor')} className="input-create-control mb-3">
-                            <option value="" selected disabled hidden> Do you have a primary care doctor?</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </Form.Control>
-                        <Form.Control as="select" name="medicaltype" value={this.state.form3.medicalInsType} onChange={this.handleChange.bind(this, 'medicalInsType')} className="input-create-control mb-3">
-                            <option value="" selected disabled hidden>What type of insurance do you have?</option>
-                            <option value="employer">Employer</option>
-                            <option value="private">Private</option>
-                            <option value="ahcss">ahcss</option>
-                            <option value="indianhealthservices">Indian Health Services</option>
-                            <option value="militarty">Military</option>
-                            <option value="none">none</option>
-                            <option value="other">other</option>
-                        </Form.Control>
-                        <Form.Control as="select" name="childCareType" value={this.state.form3.childCareType} onChange={this.handleChange.bind(this, 'childCareType')}className="input-create-control mb-3">
-                            <option value="mypartnerori">My partner or I take care of my children at home</option>
-                            <option value="headstart">Headstart</option>
-                            <option value="childcarecenter">Child Care Center/ Preschool Program</option>
-                            <option value="familychildcarehome">Family Child Care Home</option>
-                            <option value="relativeneighbor">Relative/Neighbor or babysitter</option>
-                        </Form.Control>
-                        <Form.Control as="select" name="emplyoeType" value={this.state.form3.employeeType} onChange={this.handleChange.bind(this, 'employeeType')}className="input-create-control mb-3">
-                            <option value="" selected disabled none>Do you have a job?</option>
-                            <option value="postsecondarystudent">Post Secondary Student</option>
-                            <option value="fulltime">Full Time</option>
-                            <option value="parttime">Part Time</option>
-                            <option value="retired">Retired</option>
-                            <option value="none">None</option>
-                            <option value="undisclosed">Undisclosed</option>
-                            <option value="other">Other</option>
-                        </Form.Control>
-                        <div className="input-create-control d-flex justify-content-center">
-                            <Button onClick={this.previous} className="mr-2 button-create-slide"><FaArrowLeft />  Previous </Button>
-                            <Button onClick={this.next} className="button-create-slide">Next <FaArrowRight /></Button>
-                        </div>
-                    </Form>
-               
+                    <Formik
+                        initialValues = {{
+                            medicalInsType: this.state.form3.medicalInsType,           
+                            hasInsurance: this.state.form3.hasInsurance,
+                            childCareType: this.state.form3.childCareType,
+                            employeeType: this.state.form3.employeeType,
+                            primaryDoctor: this.state.form3.primaryDoctor
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values, { setSubmitting }) => {
+                            setSubmitting(false);
+                            this.handleAction(values);
+                        }}
+                    >
+                        {({errors, touched, setFieldValue, handleSubmit}) => (
+                                <Form onSubmit={handleSubmit}>
+                                    <Field as="select" name="hasInsurance" className="input-create-control mb-3">
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </Field>
+                                    {errors.hasInsurance && touched.hasInsurance ? (
+                                    <div>{errors.hasInsurance}</div>
+                                    ) : null}
+                                    <Field as="select" name="primaryDoctor" className="input-create-control mb-3">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </Field>
+                                    {errors.primaryDoctor && touched.primaryDoctor ? (
+                                    <div>{errors.primaryDoctor}</div>
+                                    ) : null}
+                                    <Field as="select" name="medicalInsType" className="input-create-control mb-3">
+                                        <option value="Employer">Employer</option>
+                                        <option value="Private">Private</option>
+                                        <option value="AHCSS">AHCSS</option>
+                                        <option value="Indian Health Services">Indian Health Services</option>
+                                        <option value="Militarty">Military</option>
+                                        <option value="None">None</option>
+                                        <option value="Other">Other</option>
+                                    </Field>
+                                    {errors.medicalInsType && touched.medicalInsType ? (
+                                    <div>{errors.medicalInsType}</div>
+                                    ) : null}
+                                    <Field as="select" name="childCareType" className="input-create-control mb-3">
+                                        <option value="My partner or I take care of my children at home">My partner or I take care of my children at home</option>
+                                        <option value="take">Headstart</option>
+                                        <option value="Child Care Center/ Preschool Program">Child Care Center/ Preschool Program</option>
+                                        <option value="Family Child Care Home">Family Child Care Home</option>
+                                        <option value="Relative/Neighbor or babysitter">Relative/Neighbor or babysitter</option>
+                                    </Field>
+                                    {errors.childCareType && touched.childCareType ? (
+                                    <div>{errors.childCareType}</div>
+                                    ) : null}
+                                    <Field as="select" name="employeeType" className="input-create-control mb-3">
+                                        <option value="Post Secondary Student">Post Secondary Student</option>
+                                        <option value="Full time">Full Time</option>
+                                        <option value="Part time">Part Time</option>
+                                        <option value="retired">Retired</option>
+                                        <option value="None">None</option>
+                                        <option value="Undisclosed">Undisclosed</option>
+                                        <option value="Other">Other</option>
+                                    </Field>
+                                    {errors.employeeType && touched.employeeType ? (
+                                    <div>{errors.employeeType}</div>
+                                    ) : null}
+                                    <div className="input-create-control d-flex justify-content-center">
+                                        <Button type='button' onClick={() => {
+                                            //previous slide
+                                                setFieldValue('action', -1, false)
+                                                handleSubmit()
+                                            }}><FaArrowLeft />  Previous 
+                                        </Button>
+                                        <Button type='button' onClick={() => {
+                                            //next slide
+                                                setFieldValue('action', +1, false)
+                                                handleSubmit()
+                                            }}><FaArrowRight />  Next 
+                                        </Button>
+                                    </div>
+                                </Form>
+                        )}
+                    </Formik>
                 </Col>
             </Row >
         )

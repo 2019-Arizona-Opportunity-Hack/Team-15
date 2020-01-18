@@ -31,7 +31,7 @@ export default class CustomerLoginPage extends Component {
         const visitationData = this.state.visitationForm;
         console.log(visitationData)
 
-        if(visitationData.visitationType == ""){
+        if(visitationData.visitationType === ""){
             alert("Please mention Purpose of visit");
             return;
         }
@@ -48,7 +48,7 @@ export default class CustomerLoginPage extends Component {
         .then((response) => response.json())
         .then((responseJson) => {
             console.log(responseJson);
-            if(responseJson.isError == true){
+            if(responseJson.isError === true){
                 alert(responseJson.errorMsg);
             } else {
                 // alert(responseJson.visitId)

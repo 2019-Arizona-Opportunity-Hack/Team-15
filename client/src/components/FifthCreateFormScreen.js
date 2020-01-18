@@ -39,7 +39,7 @@ export default class FifthCreateFormScreen extends Component {
             medicalInsurance:  '',
     }
         this.state.form5.push(houseHolInfoObj);
-        if(this.showForm == false)
+        if(this.showForm === false)
             this.setState({showForm : true});
     }
 
