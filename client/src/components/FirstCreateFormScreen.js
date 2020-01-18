@@ -1,104 +1,140 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Button} from 'react-bootstrap';
-import {FaArrowLeft, FaArrowRight} from 'react-icons/fa';
+import { Row, Col, Button} from 'react-bootstrap';
+import {FaArrowRight} from 'react-icons/fa';
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object({
+    familyName: Yup.string().required("Required"),
+    firstName: Yup.string().required("Required"),
+    lastName: Yup.string().required("Required"),
+    dateOfBirth: Yup.string().required("Required"),
+    addressLine1: Yup.string().required("Required"),
+    addressLine2: Yup.string().required("Required"),
+    zipcode: Yup.string().required("Required"),
+    phoneNumber: Yup.string().required("Required"),
+    // gender: Yup.string().required("Required"),
+    // housingType: Yup.string().required("Required"),
+    // maritalStatus: Yup.string().required("Required")
+});
 
 
 export default class FirstCreateFormScreen extends Component {
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
-            form1: {
-                familyName: '',
-                firstName: '',
-                lastName: '',
-                dob: '',
-                addressLine1: '',
-                addressLine2: '',
-                zipcode: '',
-                phNo: '',
-                gender: '',
-                housingType: '',
-                maritalStatus: ''
-            }
+            form1: props.form1 || {}
         }
-        this.onSubmit = this.onSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.next = this.next.bind(this);
     }
 
-
-    onSubmit(event) {
-        event.preventDefault();
-        this.props.handler(this.state);
-    }
-    next(event){
-        event.preventDefault();
+    next(values){
+        this.setState({form1: values});
         this.props.handler(this.state);
         this.props.changeButton(1);
     }
 
-    handleChange(propertyName, event) {
-        const contact = this.state.form1;
-        contact[propertyName] = event.target.value;
-        this.setState({ form1: contact });
-    }
-
-    handleOptionChange(event) {
-        this.setState({
-            form1: {
-                maritalStatus: event.target.value
-            }
-        })
-    }
-
-
     render() {
+        console.log(this.state);
         return (
             <Row className="w-100">
                 <Col>
                     <h2 className="text-center">First Step</h2>
-                    <Form className="d-flex flex-column justify-content-center">
-                        <Form.Control type="text" name="familyName" value={this.state.form1.familyName} onChange={this.handleChange.bind(this, 'familyName')} className="input-create-control mb-3" placeholder="Family Name" required />
-                        <Form.Control type="text" name="firstname" value={this.state.form1.firstName} onChange={this.handleChange.bind(this, 'firstName')} className="input-create-control mb-3" placeholder="First Name" required />
-                        <Form.Control type="text" name="lastname" value={this.state.form1.lastName} onChange={this.handleChange.bind(this, 'lastName')} className="input-create-control mb-3" placeholder="Last Name" required />
-                        <Form.Control type="date" name="dateofbirth" value={this.state.form1.dob} onChange={this.handleChange.bind(this, 'dob')} className="input-create-control mb-3" required />
-                        <Form.Control type="text" name="address" value={this.state.form1.addressLine1} onChange={this.handleChange.bind(this, 'addressLine1')} className="input-create-control mb-3" placeholder="123 easy street" required />
-                        <Form.Control type="text" name="apartment" value={this.state.form1.addressLine2} onChange={this.handleChange.bind(this, 'addressLine2')} className="input-create-control mb-3" placeholder="apartment 1234" required />
-                        <Form.Control type="text" name="zipcode" id="create-zipcode" value={this.state.form1.zipcode} onChange={this.handleChange.bind(this, 'zipcode')} className="input-create-control mb-3" placeholder="zipcode" required />
-                        <Form.Control type="text" name="phonenumber" id="phNo" value={this.state.form1.phNo} onChange={this.handleChange.bind(this, 'phNo')} className="input-create-control mb-3" placeholder="123-456-7890" required />
-                        <Form.Control as="select" name="gender" value={this.state.form1.gender} onChange={this.handleChange.bind(this, 'gender')} className="input-create-control mb-3" required>
-                            <option value="" selected disabled hidden>Select your gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </Form.Control>
-                        <Form.Control as="select" name="housingtype" value={this.state.form1.housingType} onChange={this.handleChange.bind(this, 'housingType')} className="input-create-control mb-3" required>
-                            <option value="" selected disabled hidden>Choose your housing type</option>
-                            <option value="ergency">Emergency Housing Shelter/Mission/Transistional</option>
-                            <option value="evacuee">Evacuee</option>
-                            <option value="ownhome">Own Home</option>
-                            <option value="privaterental">Private Rental</option>
-                            <option value="publichousing">public housing</option>
-                            <option value="undisclosed">Undisclosed</option>
-                            <option value="unhoused">Unhoused</option>
-                            <option value="withfamily">With family/friends</option>
-                            <option value="youthhome">Youth Home/Shelter</option>
-                            <option value="refugee">Refugee</option>
-                        </Form.Control>
-                        <Form.Control as="select" name="marital-status"  value={this.state.form1.housingType} onChange={this.handleChange.bind(this, 'maritalStatus')} className="input-create-control mb-3" required>
-                            <option value="" selected disabled hidden>Choose your martial status</option>
-                            <option value="single">Single</option>
-                            <option value="married">Married</option>
-                            <option value="divorced">Divorced</option>
-                            <option value="seperated">Seperated</option>
-                            <option value="windowed">Windowed</option>
-                            <option value="undisclosed">Undisclosed</option>
-                        </Form.Control>
-                        <div className="input-create-control d-flex justify-content-center">
-                            <Button onClick={this.previous} className="mr-2 button-create-slide hide-button"><FaArrowLeft />  Previous </Button>
-                            <Button onClick={this.next} className="button-create-slide">Next <FaArrowRight /></Button>
-                        </div>
-                    </Form>
+                    <h1>Signup</h1>
+                    <Formik
+                        initialValues={{
+                            familyName: this.state.form1.familyName || '',
+                            firstName: this.state.form1.firstName || '',
+                            lastName: this.state.form1.lastName || '',
+                            dateOfBirth: this.state.form1.dateOfBirth || '',
+                            addressLine1: this.state.form1.addressLine1 || '',
+                            addressLine2: this.state.form1.addressLine2 || '',
+                            zipcode: this.state.form1.zipcode || '',
+                            phoneNumber: this.state.form1.phoneNumber || '',
+                            gender: this.state.form1.gender || '',
+                            housingType: this.state.form1.housingType || '',
+                            maritalStatus: this.state.form1.maritalStatus || ''
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit = {this.next}
+                    >
+                        {({ errors, touched }) => (
+                        <Form>
+                            <Field name="familyName" className="input-create-control mb-3"/>
+                            {errors.familyName && touched.familyName ? (
+                            <div>{errors.familyName}</div>
+                            ) : null}
+                            
+                            <Field name="firstName" className="input-create-control mb-3" />
+                            {errors.firstName && touched.firstName ? (
+                            <div>{errors.firstName}</div>
+                            ) : null}
+                            <Field name="lastName" className="input-create-control mb-3" />
+                            {errors.lastName && touched.lastName ? (
+                            <div>{errors.lastName}</div>
+                            ) : null}
+                            
+                            <Field name="dateOfBirth" className="input-create-control mb-3" />
+                            {errors.dateOfBirth && touched.dateOfBirth ? (
+                            <div>{errors.dateOfBirth}</div>
+                            ) : null}
+                            <Field name="addressLine1" className="input-create-control mb-3" />
+                            {errors.addressLine1 && touched.addressLine1 ? (
+                            <div>{errors.addressLine1}</div>
+                            ) : null}
+                            <Field name="addressLine2" className="input-create-control mb-3" />
+                            {errors.addressLine2 && touched.addressLine2 ? (
+                            <div>{errors.addressLine2}</div>
+                            ) : null}
+                            <Field name="zipcode" className="input-create-control mb-3" />
+                            {errors.zipcode && touched.zipcode ? (
+                            <div>{errors.zipcode}</div>
+                            ) : null}
+                            <Field name="phoneNumber" className="input-create-control mb-3" />
+                            {errors.phoneNumber && touched.phoneNumber ? (
+                            <div>{errors.phoneNumber}</div>
+                            ) : null}
+                            <Field name="gender" as="select" className="input-create-control mb-3">
+                                {/* <option value="" selected disabled hidden>Select your gender</option> */}
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </Field>
+                            {errors.gender && touched.gender ? (
+                            <div>{errors.gender}</div>
+                            ) : null}
+                            <Field name="housingType" as="select" className="input-create-control mb-3">
+                                {/* <option value="" selected disabled hidden>Choose your housing yype</option> */}
+                                <option value="emergency">Emergency Housing Shelter/Mission/Transistional</option>
+                                <option value="evacuee">Evacuee</option>
+                                <option value="ownhome">Own Home</option>
+                                <option value="privaterental">Private Rental</option>
+                                <option value="publichousing">public housing</option>
+                                <option value="undisclosed">Undisclosed</option>
+                                <option value="unhoused">Unhoused</option>
+                                <option value="withfamily">With family/friends</option>
+                                <option value="youthhome">Youth Home/Shelter</option>
+                                <option value="refugee">Refugee</option>
+                            </Field>
+                            {errors.housingType && touched.housingType ? (
+                            <div>{errors.housingType}</div>
+                            ) : null}
+                            <Field name="maritalStatus" as="select" className="input-create-control mb-3">
+                                {/* <option value="" selected disabled hidden>Choose your martial status</option> */}
+                                <option value="single">Single</option>
+                                <option value="married">Married</option>
+                                <option value="divorced">Divorced</option>
+                                <option value="seperated">Seperated</option>
+                                <option value="windowed">Windowed</option>
+                                <option value="undisclosed">Undisclosed</option>
+                            </Field>
+                            {errors.maritalStatus && touched.maritalStatus ? (
+                            <div>{errors.maritalStatus}</div>
+                            ) : null}
+                            <Button type="submit" className="button-create-slide">Next <FaArrowRight /></Button>
+                        </Form>
+                        )}
+                    </Formik>
                 </Col>
             </Row >
         )

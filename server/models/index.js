@@ -6,9 +6,9 @@ const Visitation = require('./visitation').Visitation;
 const Household = require('./household').Household;
 
 //IP: 64.125.67.66/32
-const DATABASE_URL = "mongodb://hari28395:Ucantcme7@cluster0-shard-00-00-tbt5x.mongodb.net:27017,cluster0-shard-00-01-tbt5x.mongodb.net:27017,cluster0-shard-00-02-tbt5x.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority";
+const DATABASE_URL = "mongodb://localhost:27017/oppHack";
 const connectDb = () => {
-  return mongoose.connect(DATABASE_URL);
+  return mongoose.connect(DATABASE_URL, {useNewUrlParser: true});
 };
 
 const models = { User, Message, Visitation, Household };

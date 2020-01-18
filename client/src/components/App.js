@@ -14,7 +14,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/" component={CustomerSplashScreen} />
-        <Route  exact path="/user/:username" component={CustomerViewPage} />
+        <Route exact path="/user/:username" component={CustomerViewPage} />
         <Route path="/newuser" component={CreateUserPage} />
         <Route path="/login" component={CustomerLoginPage} />
         <Route component={FourOrFourError} />

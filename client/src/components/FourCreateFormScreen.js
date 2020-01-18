@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
-import {FaArrowRight, FaArrowLeft} from 'react-icons/fa';
+import { Row, Col, Button } from 'react-bootstrap';
+import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+
+
+const validationSchema = Yup.object({
+    monthlyIncome: Yup.string().required("Required"),
+    incomeType: Yup.string().required("Required")
+});
 
 export default class FourCreateFormScreen extends Component {
 
@@ -12,34 +20,26 @@ export default class FourCreateFormScreen extends Component {
                 incomeType: ''
             }
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
         this.next = this.next.bind(this);
         this.previous = this.previous.bind(this);
     }
 
-    onSubmit(event) {
-        event.preventDefault();
-        //this.props.handler(this.state);
-    }
-
-    next(event) {
-        event.preventDefault();
+    handleAction(values) {
+        let action = values['action'];
+        delete values['action'];
+        this.setState({ form3: values });
         this.props.handler(this.state);
-        this.props.changeButton(4);
-        this.props.visbilityFun(event);
+        if (action === -1) {
+            this.previous()
+        } else {
+            this.next();
+        }
     }
-    previous(event){
-        event.preventDefault();
-        this.props.changeButton(2);
+    next() {
+        this.props.changeButton(3);
     }
-
-    handleChange(propertyName, event) {
-        // event.preventDefault();
-        console.log("event::", event);
-        const contact = this.state.form4;
-        contact[propertyName] = event.target.value;
-        this.setState({ form4: contact });
+    previous() {
+        this.props.changeButton(1);
     }
 
     render() {
@@ -47,23 +47,52 @@ export default class FourCreateFormScreen extends Component {
             <Row className="w-100">
                 <Col>
                     <h2 className="text-center">Fourth Step</h2>
-                    <Form onSubmit={this.onSubmit} className="d-flex flex-column justify-content-center">
-                        <Form.Control type="text" name="monthlyamount" placeholder="Monthly Amount" value={this.state.form4.monthlyIncome} onChange={this.handleChange.bind(this, 'monthlyincome')} className="input-create-control mb-3" required />
-                        <Form.Control as="select" name="incometype" value={this.state.form4.monthlyIncome} onChange={this.handleChange.bind(this, 'incomeType')} className="input-create-control mb-3">
-                            <option value="" selected disabled hidden>Choose your income type</option>
-                            <option value="csfp" >Commodity Supplement Food Program (CSFP)</option>
-                            <option value="wic" > Supplemental Assistance WIC</option>
-                            <option value="snap" >Supplemental Nurtition Assistance Proram (SNAP)</option>
-                            <option vaue="tanf" >Cash Assistant (TANF)</option>
-                            <option value="deschildcare" >DES Child Care Subsidy</option>
-                            <option value="qualityfirstscholarship" >Quality First Scholarship</option>
-                            <option value="other" >Other</option>
-                        </Form.Control>
-                        <div className="input-create-control d-flex justify-content-center">
-                            <Button onClick={this.previous} className="mr-2 button-create-slide"><FaArrowLeft />  Previous </Button>
-                            <Button onClick={this.next} className="button-create-slide">Next <FaArrowRight /></Button>
-                        </div>
-                    </Form>
+                    <Formik
+                        initialValues={{
+                            monthlyIncome: this.state.form4.monthlyIncome,
+                            incomeType: this.state.form4.incomeType
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values, { setSubmitting }) => {
+                            setSubmitting(false);
+                            this.handleAction(values);
+                        }}
+                    >
+                        {({ errors, touched, setFieldValue, handleSubmit }) => (
+                            <Form onSubmit={handleSubmit} className="d-flex flex-column justify-content-center">
+                                <Field type="text" name="monthlyIncome" placeholder="Monthly Amount" className="input-create-control mb-3" />
+                                {errors.monthlyIncome && touched.monthlyIncome ? (
+                                    <div>{errors.monthlyIncome}</div>
+                                    ) : null}
+                                <Field as="select" name="incomeType" className="input-create-control mb-3">
+                                    <option value="csfp" >Commodity Supplement Food Program (CSFP)</option>
+                                    <option value="wic" > Supplemental Assistance WIC</option>
+                                    <option value="snap" >Supplemental Nurtition Assistance Proram (SNAP)</option>
+                                    <option vaue="tanf" >Cash Assistant (TANF)</option>
+                                    <option value="deschildcare" >DES Child Care Subsidy</option>
+                                    <option value="qualityfirstscholarship" >Quality First Scholarship</option>
+                                    <option value="other" >Other</option>
+                                </Field>
+                                {errors.incomeType && touched.incomeType ? (
+                                    <div>{errors.incomeType}</div>
+                                    ) : null}
+                                <div className="input-create-control d-flex justify-content-center">
+                                    <Button type='button' onClick={() => {
+                                        //previous slide
+                                        setFieldValue('action', -1, false)
+                                        handleSubmit()
+                                    }}><FaArrowLeft />  Previous
+                                        </Button>
+                                    <Button type='button' onClick={() => {
+                                        //next slide
+                                        setFieldValue('action', +1, false)
+                                        handleSubmit()
+                                    }}><FaArrowRight />  Next
+                                        </Button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
                 </Col>
             </Row>
         )

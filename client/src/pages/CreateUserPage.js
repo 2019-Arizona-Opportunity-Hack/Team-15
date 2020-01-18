@@ -42,7 +42,7 @@ export default class CreateUserPage extends Component {
         super();
         this.state = {
             formData: {},
-            currentSlideIndex: 0,
+            currentSlideIndex: 3,
             returnCurrentSlide: {},
             visbility: "hide-button"
         }
@@ -93,15 +93,11 @@ export default class CreateUserPage extends Component {
 
     //Handler Function
     handler(obj) {
-        let stateObj = this.state.formData;
         for (var prop in obj) {
-            const nestedObj = obj[prop]
-            for (var key in nestedObj) {
-                stateObj[key] = nestedObj[key];
-            }
-
+            this.setState({[prop]: obj[prop] });
         }
-        this.setState({ formData: stateObj });
+        // this.setState({ obj });
+        // console.log(this.state)
     }
     
     visbilityFun(event){
