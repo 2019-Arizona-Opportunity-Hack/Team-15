@@ -71,21 +71,27 @@ export default class ThirdCreateFormScreen extends Component {
                     >
                         {({errors, touched, setFieldValue, handleSubmit}) => (
                                 <Form onSubmit={handleSubmit}>
+                                    <div><label name="hasInsurance"> Have Insurance?</label></div>
                                     <Field as="select" name="hasInsurance" className="input-create-control mb-3">
+                                        <option defaultValue>Select...</option>
                                         <option value="Yes">Yes</option>
                                         <option value="No">No</option>
                                     </Field>
                                     {errors.hasInsurance && touched.hasInsurance ? (
                                     <div>{errors.hasInsurance}</div>
                                     ) : null}
+                                    <div><label name="primaryDoctor"> Have Primary Doctor?</label></div>
                                     <Field as="select" name="primaryDoctor" className="input-create-control mb-3">
+                                        <option defaultValue>Select...</option>
                                         <option value="yes">Yes</option>
                                         <option value="no">No</option>
                                     </Field>
                                     {errors.primaryDoctor && touched.primaryDoctor ? (
                                     <div>{errors.primaryDoctor}</div>
                                     ) : null}
+                                    <div><label name="medicalInsType"> Medical Insurance Type</label></div>
                                     <Field as="select" name="medicalInsType" className="input-create-control mb-3">
+                                        <option defaultValue>Select...</option>
                                         <option value="Employer">Employer</option>
                                         <option value="Private">Private</option>
                                         <option value="AHCSS">AHCSS</option>
@@ -97,7 +103,9 @@ export default class ThirdCreateFormScreen extends Component {
                                     {errors.medicalInsType && touched.medicalInsType ? (
                                     <div>{errors.medicalInsType}</div>
                                     ) : null}
+                                    <div><label name="childCareType">Child Care Type</label></div>
                                     <Field as="select" name="childCareType" className="input-create-control mb-3">
+                                        <option defaultValue>Select...</option>
                                         <option value="My partner or I take care of my children at home">My partner or I take care of my children at home</option>
                                         <option value="take">Headstart</option>
                                         <option value="Child Care Center/ Preschool Program">Child Care Center/ Preschool Program</option>
@@ -107,7 +115,9 @@ export default class ThirdCreateFormScreen extends Component {
                                     {errors.childCareType && touched.childCareType ? (
                                     <div>{errors.childCareType}</div>
                                     ) : null}
+                                    <div><label name="employeeType">Employee Type</label></div>
                                     <Field as="select" name="employeeType" className="input-create-control mb-3">
+                                        <option defaultValue>Select...</option>
                                         <option value="Post Secondary Student">Post Secondary Student</option>
                                         <option value="Full time">Full Time</option>
                                         <option value="Part time">Part Time</option>
@@ -119,7 +129,7 @@ export default class ThirdCreateFormScreen extends Component {
                                     {errors.employeeType && touched.employeeType ? (
                                     <div>{errors.employeeType}</div>
                                     ) : null}
-                                    <div className="input-create-control d-flex justify-content-center">
+                                    <div className="input-create-control d-flex justify-content-between">
                                         <Button type='button' onClick={() => {
                                             //previous slide
                                                 setFieldValue('action', -1, false)

@@ -64,7 +64,9 @@ export default class FourCreateFormScreen extends Component {
                                 {errors.monthlyIncome && touched.monthlyIncome ? (
                                     <div>{errors.monthlyIncome}</div>
                                     ) : null}
+                                <div><label name="hasInsurance"> Income Type</label></div>
                                 <Field as="select" name="incomeType" className="input-create-control mb-3">
+                                    <option defaultValue>Select...</option>
                                     <option value="csfp" >Commodity Supplement Food Program (CSFP)</option>
                                     <option value="wic" > Supplemental Assistance WIC</option>
                                     <option value="snap" >Supplemental Nurtition Assistance Proram (SNAP)</option>
@@ -76,7 +78,7 @@ export default class FourCreateFormScreen extends Component {
                                 {errors.incomeType && touched.incomeType ? (
                                     <div>{errors.incomeType}</div>
                                     ) : null}
-                                <div className="input-create-control d-flex justify-content-center">
+                                <div className="input-create-control d-flex justify-content-between">
                                     <Button type='button' onClick={() => {
                                         //previous slide
                                         setFieldValue('action', -1, false)
