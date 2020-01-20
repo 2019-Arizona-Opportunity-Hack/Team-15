@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Row,Col} from 'react-bootstrap';
+import {Row,Col,Button} from 'react-bootstrap';
 
 export default class SummaryScreen extends Component {
     render() {
@@ -28,6 +28,7 @@ export default class SummaryScreen extends Component {
                     <p>Monthly Income: {/* */}</p>
                     <p>Income Type: {/* */}</p>
                     </div>
+                    <Button onClick={this.props.onSubmit} className="mr-2" style={{float:"right"}}>Submit</Button>
                 </Col>
             </Row>
         )

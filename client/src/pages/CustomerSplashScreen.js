@@ -1,32 +1,29 @@
 import React, { Component } from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Container } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import PageTemplate from './PageTemplate';
 import {FaHome} from 'react-icons/fa';
 
 export default class CustomerSplashScreen extends Component {
     render() {
         return (
-            <PageTemplate>
+            <Container>
                  <Row>
-                    <Col style={{marginTop:"25%"}}>
-                        <div className="splash-screen shadow">
-                            <div className="home-icon" style={{textAlign: "center"}}>
-                                <FaHome />
-                            </div>
-                            <h3 style={{textAlign: "center"}}>Welcome</h3>
-                            <br></br>
-                            <div style={{textAlign: "center"}}>
-                                <Button variant="primary" block> <Link to="/newuser">New User</Link></Button>
+                    <Col style={{marginTop:"5em",textAlign: "center"}}>
+                        <div className="splash-screen shadow-lg">
+                            <h1 style={{textAlign:"left"}}><FaHome /> Welcome to Chandler Care Center!</h1>
+                            <div className="border-divier"></div>
+                            <p className="mt-1">Have you alreadly registered with us?</p>
+                            <div>
+                                <Button variant="primary" block> <Link to="/newuser">No!</Link></Button>
                             </div>
                             <br></br>
-                            <div style={{textAlign: "center"}}>
-                                <Button variant="primary" block><Link to="/login">Returning User</Link></Button>
+                            <div>
+                                <Button variant="primary" block><Link to="/login">Yes!</Link></Button>
                             </div>
                         </div>
                     </Col>
                 </Row>
-            </PageTemplate>
+            </Container>
         )
     }
 }

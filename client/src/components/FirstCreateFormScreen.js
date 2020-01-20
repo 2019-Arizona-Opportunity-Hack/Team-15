@@ -12,7 +12,7 @@ const validationSchema = Yup.object({
     lastName: Yup.string().required("Required"),
     dateOfBirth: Yup.date().required("Required"),
     addressLine1: Yup.string().required("Required"),
-    addressLine2: Yup.string().required("Required"),
+    addressLine2: Yup.string(),
     zipcode: Yup.number().test('len', 'Must be exactly 5 characters', val => val.toString().length === 5),
     phoneNumber: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
     gender: Yup.string().required("Required"),
@@ -27,7 +27,7 @@ export default class FirstCreateFormScreen extends Component {
         super(props);
         console.log(props);
         this.state = {
-            form1: props.form1 || {}
+            form1: props.currentForm
         }
         this.next = this.next.bind(this);
     }
@@ -42,21 +42,20 @@ export default class FirstCreateFormScreen extends Component {
         return (
             <Row className="w-100">
                 <Col>
-                    <h2 className="text-center">First Step</h2>
-                    <h1>Signup</h1>
+                    <h2 className="text-center">1st Step / Four Steps</h2>
                     <Formik
                         initialValues={{
-                            familyName: this.state.form1.familyName || '',
-                            firstName: this.state.form1.firstName || '',
-                            lastName: this.state.form1.lastName || '',
-                            dateOfBirth: this.state.form1.dateOfBirth || '',
-                            addressLine1: this.state.form1.addressLine1 || '',
-                            addressLine2: this.state.form1.addressLine2 || '',
-                            zipcode: this.state.form1.zipcode || '',
-                            phoneNumber: this.state.form1.phoneNumber || '',
-                            gender: this.state.form1.gender || '',
-                            housingType: this.state.form1.housingType || '',
-                            maritalStatus: this.state.form1.maritalStatus || ''
+                            familyName: this.state.form1.familyName,
+                            firstName: this.state.form1.firstName,
+                            lastName: this.state.form1.lastName,
+                            dateOfBirth: this.state.form1.dateOfBirth,
+                            addressLine1: this.state.form1.addressLine1,
+                            addressLine2: this.state.form1.addressLine2,
+                            zipcode: this.state.form1.zipcode,
+                            phoneNumber: this.state.form1.phoneNumber,
+                            gender: this.state.form1.gender,
+                            housingType: this.state.form1.housingType,
+                            maritalStatus: this.state.form1.maritalStatus
                         }}
                         validationSchema={validationSchema}
                         onSubmit={this.next}

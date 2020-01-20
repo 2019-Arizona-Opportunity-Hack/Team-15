@@ -12,13 +12,10 @@ const validationSchema = Yup.object({
 
 export default class FourCreateFormScreen extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            form4: {
-                monthlyIncome: '',
-                incomeType: ''
-            }
+            form4: this.props.currentForm
         }
         this.next = this.next.bind(this);
         this.previous = this.previous.bind(this);
@@ -27,8 +24,9 @@ export default class FourCreateFormScreen extends Component {
     handleAction(values) {
         let action = values['action'];
         delete values['action'];
-        this.setState({ form3: values });
+        this.setState({ form4: values });
         this.props.handler(this.state);
+        this.props.addToParent();
         if (action === -1) {
             this.previous()
         } else {
@@ -36,7 +34,7 @@ export default class FourCreateFormScreen extends Component {
         }
     }
     next() {
-        this.props.changeButton(3);
+        this.props.changeButton(4);
     }
     previous() {
         this.props.changeButton(1);
@@ -46,7 +44,7 @@ export default class FourCreateFormScreen extends Component {
         return (
             <Row className="w-100">
                 <Col>
-                    <h2 className="text-center">Fourth Step</h2>
+                    <h2 className="text-center">4th Step/Four Steps</h2>
                     <Formik
                         initialValues={{
                             monthlyIncome: this.state.form4.monthlyIncome,
@@ -89,8 +87,7 @@ export default class FourCreateFormScreen extends Component {
                                         //next slide
                                         setFieldValue('action', +1, false)
                                         handleSubmit()
-                                    }}><FaArrowRight />  Next
-                                        </Button>
+                                    }}><FaArrowRight /> Next</Button>
                                 </div>
                             </Form>
                         )}

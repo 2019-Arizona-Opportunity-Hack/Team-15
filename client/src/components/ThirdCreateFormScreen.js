@@ -15,18 +15,10 @@ const validationSchema = Yup.object({
 
 export default class ThirdCreateFormScreen extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            form3: {
-                medicalInsType: '',
-                hasInsurance: '',
-                childCareType: '',
-                employeeType: '',
-                primaryDoctor: '',
-
-            }
-
+            form3: this.props.currentForm
         }
         this.next = this.next.bind(this);
         this.previous = this.previous.bind(this);
@@ -54,7 +46,7 @@ export default class ThirdCreateFormScreen extends Component {
         return (
             <Row className="w-100">
                 <Col>
-                    <h3 className="text-center">Third Step</h3>
+                    <h3 className="text-center">3rd Step / Four Steps</h3>
                     <Formik
                         initialValues = {{
                             medicalInsType: this.state.form3.medicalInsType,           

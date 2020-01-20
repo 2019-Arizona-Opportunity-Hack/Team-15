@@ -1,5 +1,8 @@
 html,body {
+  margin:0;
+  padding:0;
   height:100%;
+  background-color: #003366 !important;
 }
 
 .container{
@@ -9,9 +12,6 @@ html,body {
   height:calc(100% - 2em);
   padding:0;
   margin: 0 auto;
-}
-.row{
-  /* background-color:#eef7fa; */
 }
 #center-container{
   margin-left:25%;
@@ -26,7 +26,6 @@ html,body {
   padding: 2em;
   background-color:white;
   margin: auto;
-  /* border:1px solid black; */
 }
 .margin-auto{
   margin: 0;
@@ -47,12 +46,24 @@ html,body {
   width:50%;
 }
 #logo-header{
-  text-align: center;
+  text-align: left;
+  margin-top:1em;
+  border-bottom: 1px solid black;
+}
+#logo-header .col a{
+  -webkit-transition: all 2s ease;
+  transition: all 2s ease;
+  line-height: 1em;
+  border-bottom:0px solid transparent;
+}
+#logo-header .col a:hover{
+ background-color:darkblue;
 }
 .home-icon{
   font-size: 2em;
 }
 .input-create-control{
+  display:block;
   min-width:300px !important;
   max-width:600px !important;
   width:100%;
@@ -88,6 +99,10 @@ a{
   color:white;
   text-decoration: none;
 }
+.border-divier{
+  border-bottom: 1px solid #999999;
+}
+
 a:visited{
   color:white;
 }
