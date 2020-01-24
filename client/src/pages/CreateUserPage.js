@@ -68,7 +68,7 @@ export default class CreateUserPage extends Component {
             case 3:
                 return (<FourCreateFormScreen changeButton={this.currentSlide} currentForm={this.state.form4}  handler={this.handler} addToParent={this.addToParent} />);
             case 4:
-                return (<SummaryScreen handler={this.handler} parrentSubmit={this.onSubmit} />)
+                return (<SummaryScreen changeButton={this.currentSlide} reviewForm={this.state.formData} handler={this.handler} parentSubmit={this.onSubmit} />)
             default:
                 return (
                     <div>
@@ -93,10 +93,9 @@ export default class CreateUserPage extends Component {
 
     //on Submit
     onSubmit(event) {
-
-        this.setState({
-            submittedor: "Data Attempted to submit"
-        })
+        let submitFormData = {
+            formData: this.state.formData
+        }
         console.log(this.state);
         fetch(HOSTNAME + '/users', {
             method: 'POST',
@@ -104,12 +103,19 @@ export default class CreateUserPage extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify(submitFormData)
+        }).then(res => res.json())
+        .then((respJson) => {
+            console.log(respJson);
+            this.props.history.push({
+                pathname: "/login"
+            })
+        },
+        (error) => {
+            alert("error");
         });
-        alert("Success");
-        this.props.history.push({
-            pathname: "/login"
-        })
+
+        
         event.preventDefault();
     }
 
@@ -118,13 +124,10 @@ export default class CreateUserPage extends Component {
         for (var prop in obj) {
             this.setState({ [prop]: obj[prop] });
         }
-        // this.setState({ obj });
-        // console.log(this.state)
     }
     //add all objects together as one object for the post request
     addToParent(){
         let parentForm = Object.assign(this.state.form1,this.state.form2,this.state.form3,this.state.form4);
-        console.log(parentForm);
         this.setState({
             formData: parentForm
         });

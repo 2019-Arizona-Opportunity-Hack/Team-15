@@ -64,39 +64,6 @@ connectDb().then(async () => {
   );
 });
 
-const createUser = async (formData) => {
-  // var cnt = await models.User.checkByUserName("formData", formData);
-  // if(cnt == 0){
-    const user = new models.User({
-      username: "formData",
-      firstName: "formData",
-      lastName: "formData",
-      dateOfBirth: new Date('2006-06-05'),
-      address: "formData",
-      zipCode: 453,
-      city: "formData",
-      phoneNumber: 123,
-      gender: "formData",
-      housingType: "formData",
-      maritalStatus: "formData",
-      ethnicity: ["formData", "formData1"],
-      selfStatus: "formData",
-      education: "formData",
-      primaryLanguage: "formData",
-      dentalInsurance: true,
-      primaryDoctor: true,
-      monthlyIncomeAmount: 9999999999,
-      monthlyIncomeType: "formData",
-      medicalInsurance: "formData",
-      childCareType: "formData"
-
-    });
-
-    console.log(user);
-    await user.save();
-
-};
-
 const visitCreate = async (formData) => {
   const age = await models.User.getAge("formData","formData","formData");
   var chld=false;
