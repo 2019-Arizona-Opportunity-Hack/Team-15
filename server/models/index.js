@@ -6,7 +6,7 @@ const Visitation = require('./visitation').Visitation;
 const Household = require('./household').Household;
 
 //IP: 64.125.67.66/32
-const DATABASE_URL = "mongodb://localhost:27017/oppHack";
+const DATABASE_URL = "mongodb+srv://opphackaz:PaypalKeap@cluster0-puod6.mongodb.net/test?retryWrites=true&w=majority";
 const connectDb = () => {
   return mongoose.connect(DATABASE_URL, {useNewUrlParser: true});
 };

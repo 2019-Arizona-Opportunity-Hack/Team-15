@@ -19,30 +19,31 @@ router.post('/', async (req, res) => {
     familyName: formData.familyName,
     firstName: formData.firstName,
     lastName: formData.lastName,
-    dateOfBirth: new Date(),
-    address: formData.addressLine1,
-    zipCode: 123,
-    phoneNumber: 1234567890,
+    dateOfBirth: formData.dateOfBirth, //TODO
+    addressLine1: formData.addressLine1,
+    addressLine2: formData.addressLine2,
+    zipCode: formData.zipcode,
+    phoneNumber: 1234444, //TODO
     gender: formData.gender,
     housingType: formData.housingType,
     maritalStatus: formData.maritalStatus,
-    ethnicity: ["formData", "formData1"],
-    selfStatus: "formData",
-    education: formData.highestEducation,
+    ethnicity: formData.ethnicity,
+    selfIdentity: formData.selfIdentity,
+    highestEducation: formData.highestEducation,
     primaryLanguage: formData.primaryLanguage,
-    dentalInsurance: true,
-    primaryDoctor: true,
-    monthlyIncomeAmount: 10000,
+    primaryDoctor: formData.primaryDoctor, // TODO
+    monthlyIncome: formData.monthlyIncome,
     monthlyIncomeType: formData.incomeType,
     medicalInsurance: formData.medicalInsType,
     childCareType: formData.childCareType,
-
   });
   const user = await req.context.models.User.createUser(req.body.formData.familyName,userModel);
+  console.log(user);
   if(user && user.isError){
-    return res.status(500).send("Error in creating user. Contact Office");
-  }else if(user){
-    res.status(200).send("success");
+    const errorCode = user.errorCode || 500;
+    return res.status(errorCode).send(user);
+  } else if(user){
+    res.status(200).send(user);
   }
 })
 

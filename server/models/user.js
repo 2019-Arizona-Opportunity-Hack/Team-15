@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   ethnicity: {
-    type: [String],
+    type: String,
   },
   selfStatus: {
     type: [String],
@@ -49,10 +49,10 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   dentalInsurance: {
-    type: Boolean,
+    type: String,
   },
   primaryDoctor: {
-    type: Boolean,
+    type: String,
   },
   employmentType: {
     type: String,
@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
   },
   monthlyIncomeType: {
-    type: [String],
+    type: String,
   },
   medicalInsurance: {
     type: String,
@@ -84,21 +84,25 @@ userSchema.statics.findByUserName = async function(familyName) {
 };
 
 userSchema.statics.createUser = async function(familyName, userObj) {
-  console.log(userObj);
   //Count users
-  let cnt = await this.countDocuments({familyName:familyName});
-  if(cnt >= 0){
+  // let cnt = await this.countDocuments({familyName:familyName});
+  // if(cnt >= 0) {
+  try {
     await userObj.save();
     return { 
       isError : false,
       msg: "success"
     }
+  } catch(err) {
+    const error = { 
+      isError : true, 
+      errorCode: 422
+    }
+    if (err.name === 'MongoError' && err.code === 11000) {
+      error['msg'] = "Username already exists";
+    } else error['msg'] = err.errmsg;
+    return error;
   }
-  else{
-    console.log("Already UserName Exists");
-    return { isError : true}
-  }
-
 };
 
 userSchema.statics.checkByUserName = async (familyName,userObj) => {
@@ -107,7 +111,7 @@ userSchema.statics.checkByUserName = async (familyName,userObj) => {
 };
 
 userSchema.statics.getAge = async function(familyName, firstname, lastname) {		
-  let user = await this.findOne({		
+  let user = await this.findOne({
     familyName: familyName,		
     firstName: firstname,
     lastName: lastname,		

@@ -28,7 +28,7 @@ export default class FourCreateFormScreen extends Component {
         this.props.handler(this.state);
         this.props.addToParent();
         if (action === -1) {
-            this.previous()
+            this.previous();
         } else {
             this.next();
         }
@@ -87,7 +87,7 @@ export default class FourCreateFormScreen extends Component {
                                         //next slide
                                         setFieldValue('action', +1, false)
                                         handleSubmit()
-                                    }}><FaArrowRight /> Next</Button>
+                                    }}><FaArrowRight /> Review</Button>
                                 </div>
                             </Form>
                         )}
