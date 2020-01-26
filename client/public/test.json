@@ -1,0 +1,18 @@
+[
+    {
+        "familyName": "Thomas",
+        "firstName": "John",
+        "lastName": "Thomas",
+        "vistsLeft": 5,
+        "visitedDate": "01-20-2019 4:20pm",
+        "visitsID": 2015489
+    },
+    {
+        "familyName": "Doe",
+        "firstName": "Derek",
+        "lastName": "Doe",
+        "visitsLeft": 1,
+        "visitedDate": "01-25-2019 5:20pm",
+        "visitsID": 5875214
+    }
+]

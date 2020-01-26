@@ -2,15 +2,10 @@ import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-bootstrap';
 
 export default class SummaryScreen extends Component {
-
-    // constructor(props) {
-    //     super(props);
-    // }
-
     render() {
         return (
-            <div>
-                <Row className="w-100">
+            <Row>
+                <Row>
                     <Col>
                         <p>Family Name: {this.props.reviewForm.familyName}</p>
                     </Col>
@@ -105,7 +100,7 @@ export default class SummaryScreen extends Component {
                         <Button onClick={this.props.parentSubmit} className="mr-2" style={{ float: "right" }}>Submit</Button>
                     </Col>
                 </Row>
-            </div>
+            </Row>
         )
     }
 }

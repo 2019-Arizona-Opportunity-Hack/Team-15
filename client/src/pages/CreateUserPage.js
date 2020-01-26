@@ -11,30 +11,7 @@ import SummaryScreen from '../components/SummaryScreen';
 const HOSTNAME = "http://localhost:5000/api";
 
 
-//switch for current slide
-/*
-const SwitchCard = ({ curIndex, changeButton, handler, onSubmit, addToParent }) => {
 
-    switch (curIndex) {
-        case 0:
-            return (<FirstCreateFormScreen changeButton={changeButton} handler={handler} />)
-        case 1:
-            return (<SecondCreateFormScreen changeButton={changeButton} handler={handler} />)
-        case 2:
-            return (<ThirdCreateFormScreen changeButton={changeButton} handler={handler} />)
-        case 3:
-            return (<FourCreateFormScreen changeButton={changeButton}  handler={handler} addToParent={addToParent} />);
-        case 4:
-            return (<SummaryScreen handler={handler} parrentSubmit={onSubmit} />)
-        default:
-            return (
-                <div>
-                    <p>Loading</p>
-                </div>
-            );
-    }
-}
-*/
 
 export default class CreateUserPage extends Component {
     constructor() {
@@ -137,7 +114,6 @@ export default class CreateUserPage extends Component {
         
         return (
             <PageTemplate>
-                {/* <form onSubmit={this.onSubmit}> */}
                 <Row>
                     <Col className="splash-screen">
                         <Row>
@@ -155,10 +131,7 @@ export default class CreateUserPage extends Component {
                         </Row>
                     </Col>
                 </Row>
-                {/*  <FirstCreateFormScreen handler={this.handler} />*/}
-
                 <p>{this.state.submittedor}</p>
-                {/* </form> */}
             </PageTemplate>
         )
     }

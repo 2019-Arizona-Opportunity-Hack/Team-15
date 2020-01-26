@@ -1,109 +1,178 @@
 import React, { Component } from 'react';
 import PageTemplate from './PageTemplate';
 import { Row, Col, Button, Form } from 'react-bootstrap';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
+import LoadingBlackSpin from '../components/LoadingBlackSpin';
+
 const HOSTNAME = "http://localhost:5000/api"
+
+const registrationSchema = Yup.object({
+    familyName: Yup.string().required('required'),
+    firstName: Yup.string().required('required'),
+    lastName: Yup.string().required('required'),
+    voDate: Yup.string().required('please select a valid date'),
+    visitationType: Yup.string().required('Please select one visitation type')
+});
 
 export default class CustomerLoginPage extends Component {
     constructor() {
         super();
         this.state = {
-            familyName: "",
-            visitedDate: "09/20/2019",
-            vistsLeft: "2",
-            visitationForm: {
-                familyName: '',
-                firstName: '',
-                lastName: '',
-                visitationType: '',
-                dov: ''
-            }
+            submitLoading: false
         }
-        this.onSubmit = this.onSubmit.bind(this);
+        this.onSubmitFormUser = this.onSubmitFormUser.bind(this);
     }
 
-    handleChange(propertyName, event) {
-        const contact = this.state.visitationForm;
-        contact[propertyName] = event.target.value;
-        this.setState({ visitationForm: contact });
-    }
 
-    onSubmit(event) {
+
+    onSubmitFormUser(lotsOfValue) {
+        /*
         const visitationData = this.state.visitationForm;
         console.log(visitationData)
+     
 
-        if(visitationData.visitationType === ""){
+        if (visitationData.visitationType === "") {
             alert("Please mention Purpose of visit");
             return;
         }
-            
+
         event.preventDefault();
-        fetch(HOSTNAME +  '/visitation/create',{
+        fetch(HOSTNAME + '/visitation/create', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-              },
+            },
             body: JSON.stringify(visitationData)
         })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            console.log(responseJson);
-            if(responseJson.isError === true){
-                alert(responseJson.errorMsg);
-            } else {
-                // alert(responseJson.visitId)
-                let resObj = this.state.visitationForm;
-                console.log('/user/' + this.state.visitationForm.familyName);
-                resObj["visitId"] = responseJson.visitId;
-                //sent to next page
-                this.props.history.push({
-                    pathname: '/user/' + this.state.visitationForm.familyName,
-                    state: { visitationData: resObj }
-                  })
-                
-            }
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log(responseJson);
+                if (responseJson.isError === true) {
+                    alert(responseJson.errorMsg);
+                } else {
+                    // alert(responseJson.visitId)
+                    let resObj = this.state.visitationForm;
+                    console.log('/user/' + this.state.visitationForm.familyName);
+                    resObj["visitId"] = responseJson.visitId;
+                    //sent to next page
+                    this.props.history.push({
+                        pathname: '/user/' + this.state.visitationForm.familyName,
+                        state: { visitationData: resObj }
+                    })
+
+                }
+            });
+            */
+        this.setState({
+            submitLoading: true
         });
     }
-    onClick(event, stringuser) {
-        console.log("Current Event" + event);
-        console.log("Current User" + stringuser);
-    }
+
     render() {
         return (
             <PageTemplate>
-                <Row className="align-items-center justify-content-center" style={{marginTop:"25%", textAlign:"center"}}>
-                    <Col className="w-100">
-                        <form onSubmit={this.onSubmit} id="familyName-form" className="w-100">
-                            <Form.Control id="id-familyName" type="text" name="id-familyName" placeholder="family name" className="mb-2" 
-                            value={this.state.visitationForm.familyName} onChange={this.handleChange.bind(this, 'familyName')} required/>
+                <Row className="splash-screen" style={{ textAlign: "center" }}>
+                    <Col>
+                        <h1>Please Login!</h1>
+                        <Formik
+                            initialValues={{ familyName: '', firstName: '', lastName: '', visitationType: '', voDate: '' }}
+                            validationSchema={registrationSchema}
+                            onSubmit={(values) => {
+                                console.log("Something has been submitted" + values);
+                                this.onSubmitFormUser(values);
+                            }}>
+                            {({
+                                handleSubmit,
+                                handleChange,
+                                handleBlur,
+                                values,
+                                touched,
+                                isValid,
+                                setFieldValue,
+                                errors
+                            }
+                            ) => (
+                                    <Form noValidate onSubmit={handleSubmit}>
+                                        <Form.Row>
+                                            <Form.Group as={Col} controlId="familyNameId">
+                                                <Form.Label>Family Name</Form.Label>
+                                                <Form.Control type="text"
+                                                    name="familyName"
+                                                    value={values.familyName}
+                                                    onChange={handleChange}
+                                                    isInvalid={touched.familyName && errors.familyName}
+                                                />
+                                                {touched.familyName && errors.familyName ? (
+                                                    <p>{errors.familyName}</p>
+                                                ) : null}
+                                                <br></br>
+                                                <Form.Label>First Name</Form.Label>
+                                                <Form.Control type="text"
+                                                    name="firstName"
+                                                    value={values.firstName}
+                                                    onChange={handleChange}
+                                                    isInvalid={touched.firstName && errors.firstName}
+                                                />
+                                                {touched.firstName && errors.firstName ? (
+                                                    <p>{errors.firstName}</p>
+                                                ) : null}
 
-                            <Form.Control id="id-firstName" type="text" name="id-firstName" placeholder="first name" className="mb-2" 
-                            value={this.state.visitationForm.firstName} onChange={this.handleChange.bind(this, 'firstName')} required/>
+                                                <br></br>
+                                                <Form.Label>Last Name</Form.Label>
+                                                <Form.Control type="text"
+                                                    name="lastName"
+                                                    value={values.lastName}
+                                                    onChange={handleChange}
+                                                    isInvalid={touched.lastName && errors.lastName}
+                                                />
+                                                {touched.lastName && errors.lastName ?
+                                                    (<p>{errors.lastName}</p>) : null}
+                                                <br></br>
+                                                <Form.Label>Purpose of Vist</Form.Label>
+                                                <br></br>
+                                                <Field as="select" name="visitationType" className={"form-control " + (touched.visitationType && errors.visitationType ? 'is-invalid' : '')}
+                                                >
+                                                    <option value="">Purpose of Visit</option>
+                                                    <option value="AHCCCS">AHCCCS</option>
+                                                    <option value="WIC">WIC</option>
+                                                    <option value="Food Bank">Food Bank</option>
+                                                    <option value="FTF">FTF (Classes)</option>
+                                                    <option value="Diapers">Diapers</option>
+                                                    <option value="Medical">Medical</option>
+                                                    <option value="Dental">Dental</option>
+                                                    <option value="Immunizations">Immunizations</option>
+                                                    <option value="Vision and Hearing">Vision and Hearing</option>
+                                                </Field>
+                                                {(touched.visitationType && errors.visitationType) ? (
+                                                    <p>{errors.visitationType}</p>
+                                                ) : null}
+                                                <br></br>
+                                                <Form.Label>Visit Date</Form.Label>
+                                                <Field type="date"
+                                                    name='voDate'
+                                                    className={"form-control " + (touched.voDate && errors.voDate ? 'is-invalid' : '')}
+                                                ></Field>
+                                                <br></br>
+                                                {(touched.voDate && errors.voDate) ?
+                                                    (<p>{errors.voDate}</p>) : null
+                                                }
+                                            </Form.Group>
+                                        </Form.Row>
+                                        <Form.Row>
+                                            <Button type="submit">Submit</Button>
+                                        </Form.Row>
+                                    </Form>
+                                )
 
-                            <Form.Control id="id-lastName" type="text" name="id-lastName" placeholder="last name" className="mb-2" 
-                            value={this.state.visitationForm.lastName} onChange={this.handleChange.bind(this, 'lastName')} required/>
-
-                            <Form.Group controlId="form.visitationSelect" required>
-                                <Form.Control as="select" value={this.state.visitationForm.visitationType} onChange={this.handleChange.bind(this, 'visitationType')}>
-                                <option value="">Purpose of Visit</option>
-                                <option value="AHCCCS">AHCCCS</option>
-                                <option value="WIC">WIC</option>
-                                <option value="Food Bank">Food Bank</option>
-                                <option value="FTF">FTF (Classes)</option>
-                                <option value="Diapers">Diapers</option>
-                                <option value="Medical">Medical</option>
-                                <option value="Dental">Dental</option>
-                                <option value="Immunizations">Immunizations</option>
-                                <option value="Vision and Hearing">Vision and Hearing</option>
-                                </Form.Control>
-                            </Form.Group>
-
-                            <Form.Control id="id-dov" type="date" name="id-dov" placeholder="Visit Date" className="mb-2" 
-                            value={this.state.visitationForm.dov} onChange={this.handleChange.bind(this, 'dov')} required/>
-                            
-                            <Button type="submit" className="mb-3" style={{marginTop:"5%"}}>Submit</Button>
-                            {/* <Link to={{ pathname: "/user/" + this.state.familyName, state: { visitedDate: this.state.visitedDate, vistsLeft: this.state.vistsLeft } }}>Submit</Link> */}
-                        </form>
+                            }
+                        </Formik>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                      
                     </Col>
                 </Row>
             </PageTemplate>
