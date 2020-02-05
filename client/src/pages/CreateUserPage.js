@@ -5,7 +5,7 @@ import ThirdCreateFormScreen from '../components/ThirdCreateFormScreen'
 import FourCreateFormScreen from '../components/FourCreateFormScreen'
 import PageTemplate from './PageTemplate';
 import { Row, Col } from 'react-bootstrap';
-import { FaUserPlus } from 'react-icons/fa';
+import { FaUserPlus, FaCheck } from 'react-icons/fa';
 import SummaryScreen from '../components/SummaryScreen';
 
 const HOSTNAME = "http://localhost:5000/api";
@@ -21,10 +21,12 @@ export default class CreateUserPage extends Component {
             form1: {},
             form2: {},
             form3: {},
-            form4:{},
+            form4: {},
             currentSlideIndex: 0,
             returnCurrentSlide: {},
-            visbility: "hide-button"
+            sendingData: false,
+            sendingDataText: 'Sending Data...',
+            succesful: false,
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.handler = this.handler.bind(this);
@@ -43,7 +45,7 @@ export default class CreateUserPage extends Component {
             case 2:
                 return (<ThirdCreateFormScreen changeButton={this.currentSlide} currentForm={this.state.form3} handler={this.handler} />)
             case 3:
-                return (<FourCreateFormScreen changeButton={this.currentSlide} currentForm={this.state.form4}  handler={this.handler} addToParent={this.addToParent} />);
+                return (<FourCreateFormScreen changeButton={this.currentSlide} currentForm={this.state.form4} handler={this.handler} addToParent={this.addToParent} />);
             case 4:
                 return (<SummaryScreen changeButton={this.currentSlide} reviewForm={this.state.formData} handler={this.handler} parentSubmit={this.onSubmit} />)
             default:
@@ -56,6 +58,7 @@ export default class CreateUserPage extends Component {
     }
     //sets the current slide for the create page
     currentSlide(number) {
+        console.log("Current slide activated");
         this.setState({
             currentSlideIndex: number
         })
@@ -69,11 +72,22 @@ export default class CreateUserPage extends Component {
     }
 
     //on Submit
+    //show sending data at first
+    //show either error state
+    //show either succcesful state
     onSubmit(event) {
+        event.preventDefault();
+
+        this.setState({
+            sendingData: true
+        });
+
         let submitFormData = {
             formData: this.state.formData
         }
-        console.log(this.state);
+        let messageResponse = this.state.sendingDataText;
+
+        console.log('Entered the submit data party');
         fetch(HOSTNAME + '/users', {
             method: 'POST',
             headers: {
@@ -82,18 +96,30 @@ export default class CreateUserPage extends Component {
             },
             body: JSON.stringify(submitFormData)
         }).then(res => res.json())
-        .then((respJson) => {
-            console.log(respJson);
-            this.props.history.push({
-                pathname: "/login"
-            })
-        },
-        (error) => {
-            alert("error");
-        });
+            .then((respJson) => {
+                console.log(respJson);
+                this.props.history.push({
+                    pathname: "/login"
+                })
+            },
+                (error) => {
+                    messageResponse = 'Error while contacting server';
+                    console.log("error reached");
+                })
+            .then(
+                this.setState({
+                    sendingDataText: messageResponse
+                })
+            )
 
-        
-        event.preventDefault();
+        console.log('show succesful')
+        this.setState({
+            successful: true,
+            sendingDataText: 'successful..'
+        });
+        this.props.history.push({
+            pathname:"/user/jthomas"
+        });
     }
 
     //Handler Function for objects to be saved
@@ -103,31 +129,51 @@ export default class CreateUserPage extends Component {
         }
     }
     //add all objects together as one object for the post request
-    addToParent(){
-        let parentForm = Object.assign(this.state.form1,this.state.form2,this.state.form3,this.state.form4);
+    addToParent() {
+        let parentForm = Object.assign(this.state.form1, this.state.form2, this.state.form3, this.state.form4);
         this.setState({
             formData: parentForm
         });
     }
 
     render() {
-        
+
         return (
             <PageTemplate>
+                <div id="black-screen" className={this.state.sendingData ? 'black-screen-activated' : 'black-screen-deactivated'}>
+                    <div className="central-message">
+                        {this.state.successful ? (
+                            <span className="check-size">
+                                <FaCheck />
+                            </span>
+                        )
+                            : (
+                                <div className="sk-fading-circle">
+                                    <div className="sk-circle1 sk-circle"></div>
+                                    <div className="sk-circle2 sk-circle"></div>
+                                    <div className="sk-circle3 sk-circle"></div>
+                                    <div className="sk-circle4 sk-circle"></div>
+                                    <div className="sk-circle5 sk-circle"></div>
+                                    <div className="sk-circle6 sk-circle"></div>
+                                    <div className="sk-circle7 sk-circle"></div>
+                                    <div className="sk-circle8 sk-circle"></div>
+                                    <div className="sk-circle9 sk-circle"></div>
+                                    <div className="sk-circle10 sk-circle"></div>
+                                    <div className="sk-circle11 sk-circle"></div>
+                                    <div className="sk-circle12 sk-circle"></div>
+                                </div>
+                            )
+                        }
+                        <p>{this.state.sendingDataText}</p>
+                    </div>
+                </div>
                 <Row>
-                    <Col className="splash-screen">
+                    <Col className={"splash-screen " + (this.state.sendingData ? 'hidden-scroll-main ' : 'active-scroll')} >
                         <Row>
                             <Col><h2 className="text-center"><FaUserPlus />  Registration</h2></Col>
                         </Row>
-                        <Row style={{textAlign: "center"}}>
+                        <Row style={{ textAlign: "center" }}>
                             {this.SwitchCard(this.state.currentSlideIndex)}
-                        </Row>
-                        <Row className="w-100">
-                            <p></p>
-                            <div className="d-flex flex-column justify-content-center w-100">
-                                <button type="cancel" className={"btn btn-primary input-create-control mb-3 mt-3 " + this.state.visbility} onClick={this.onCancel}>Cancel</button>
-                                <button type="submit" className={"btn btn-primary input-create-control " + this.state.visbility} onClick={this.onSubmit}>Submit</button>
-                            </div>
                         </Row>
                     </Col>
                 </Row>

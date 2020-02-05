@@ -26,6 +26,8 @@ html,body {
   padding: 2em;
   background-color:white;
   margin: auto;
+  transition:all 250ms;
+  transition-delay: 2s;
 }
 .margin-auto{
   margin: 0;
@@ -47,15 +49,9 @@ html,body {
 }
 #logo-header{
   text-align: left;
-  margin-top:1em;
-  border-bottom: 1px solid black;
 }
-#logo-header .col a{
-  line-height: 1em;
-  border-bottom:0px solid transparent;
-}
+
 #logo-header .col a:hover{
- color:black !important;
  text-decoration: underline !important;
 }
 .home-icon{
@@ -67,13 +63,6 @@ html,body {
   max-width:600px !important;
   width:100%;
   margin: auto;
-}
-.input-checkmark{
-  max-width:600px !important;
-  min-width:300px !important;
-  width:100%;
-  margin:auto;
-  display:block;
 }
 #id-user{
   min-width:300px;
@@ -118,8 +107,8 @@ Spinner
 */
 .sk-fading-circle {
   margin: 100px auto;
-  width: 40px;
-  height: 40px;
+  width: 100px;
+  height: 100px;
   position: relative;
 }
 
@@ -250,4 +239,52 @@ Spinner
 @keyframes sk-circleFadeDelay {
   0%, 39%, 100% { opacity: 0; }
   40% { opacity: 1; } 
+}
+#black-screen{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  display:block;
+  background-color: black;
+  z-index:9999;
+}
+.black-screen-deactivated{
+  color:black;
+  visibility: hidden;
+  transition: all 2s;
+  transform: scaleX(0);
+  transform-origin: 0% 100%;
+}
+.black-screen-activated{
+  visibility: visible;
+  transition: all 1s;
+  transform: scaleX(1);
+  color:white;
+}
+.central-message{
+  position:relative;
+  display:block;
+  margin:auto;
+  height:150px;
+  width:150px;
+}
+
+.hidden-scroll-main{
+  overflow: hidden;
+  visibility: hidden;
+  height:100px;
+}
+.active-scroll-main{
+  overflow: auto;
+  visibility:visible;
+}
+.check-size{
+  font-size:5.0em;
+  color:green;
+}
+
+.text-left{
+  text-align: left;
 }

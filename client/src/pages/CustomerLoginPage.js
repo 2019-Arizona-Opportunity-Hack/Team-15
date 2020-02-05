@@ -8,19 +8,13 @@ import LoadingBlackSpin from '../components/LoadingBlackSpin';
 const HOSTNAME = "http://localhost:5000/api"
 
 const registrationSchema = Yup.object({
-    familyName: Yup.string().required('required'),
-    firstName: Yup.string().required('required'),
-    lastName: Yup.string().required('required'),
-    voDate: Yup.string().required('please select a valid date'),
-    visitationType: Yup.string().required('Please select one visitation type')
+    username: Yup.string().required('required'),
+    password: Yup.string().required('required'),
 });
 
 export default class CustomerLoginPage extends Component {
-    constructor() {
-        super();
-        this.state = {
-            submitLoading: false
-        }
+    constructor(props) {
+        super(props);
         this.onSubmitFormUser = this.onSubmitFormUser.bind(this);
     }
 
@@ -65,9 +59,6 @@ export default class CustomerLoginPage extends Component {
                 }
             });
             */
-        this.setState({
-            submitLoading: true
-        });
     }
 
     render() {
@@ -77,7 +68,7 @@ export default class CustomerLoginPage extends Component {
                     <Col>
                         <h1>Please Login!</h1>
                         <Formik
-                            initialValues={{ familyName: '', firstName: '', lastName: '', visitationType: '', voDate: '' }}
+                            initialValues={{ username: '', password: ''}}
                             validationSchema={registrationSchema}
                             onSubmit={(values) => {
                                 console.log("Something has been submitted" + values);
@@ -94,70 +85,24 @@ export default class CustomerLoginPage extends Component {
                                 errors
                             }
                             ) => (
-                                    <Form noValidate onSubmit={handleSubmit}>
+                                    <Form noValidate onSubmit={handleSubmit} className="text-left">
                                         <Form.Row>
                                             <Form.Group as={Col} controlId="familyNameId">
-                                                <Form.Label>Family Name</Form.Label>
+                                                <Form.Label>Username*</Form.Label>
                                                 <Form.Control type="text"
-                                                    name="familyName"
-                                                    value={values.familyName}
+                                                    name="username"
+                                                    value={values.username}
                                                     onChange={handleChange}
-                                                    isInvalid={touched.familyName && errors.familyName}
+                                                    isInvalid={touched.username && errors.username}
                                                 />
-                                                {touched.familyName && errors.familyName ? (
-                                                    <p>{errors.familyName}</p>
-                                                ) : null}
                                                 <br></br>
-                                                <Form.Label>First Name</Form.Label>
-                                                <Form.Control type="text"
-                                                    name="firstName"
-                                                    value={values.firstName}
+                                                <Form.Label>Password*</Form.Label>
+                                                <Form.Control type="password"
+                                                    name="password"
+                                                    value={values.password}
                                                     onChange={handleChange}
-                                                    isInvalid={touched.firstName && errors.firstName}
+                                                    isInvalid={touched.password && errors.password}
                                                 />
-                                                {touched.firstName && errors.firstName ? (
-                                                    <p>{errors.firstName}</p>
-                                                ) : null}
-
-                                                <br></br>
-                                                <Form.Label>Last Name</Form.Label>
-                                                <Form.Control type="text"
-                                                    name="lastName"
-                                                    value={values.lastName}
-                                                    onChange={handleChange}
-                                                    isInvalid={touched.lastName && errors.lastName}
-                                                />
-                                                {touched.lastName && errors.lastName ?
-                                                    (<p>{errors.lastName}</p>) : null}
-                                                <br></br>
-                                                <Form.Label>Purpose of Vist</Form.Label>
-                                                <br></br>
-                                                <Field as="select" name="visitationType" className={"form-control " + (touched.visitationType && errors.visitationType ? 'is-invalid' : '')}
-                                                >
-                                                    <option value="">Purpose of Visit</option>
-                                                    <option value="AHCCCS">AHCCCS</option>
-                                                    <option value="WIC">WIC</option>
-                                                    <option value="Food Bank">Food Bank</option>
-                                                    <option value="FTF">FTF (Classes)</option>
-                                                    <option value="Diapers">Diapers</option>
-                                                    <option value="Medical">Medical</option>
-                                                    <option value="Dental">Dental</option>
-                                                    <option value="Immunizations">Immunizations</option>
-                                                    <option value="Vision and Hearing">Vision and Hearing</option>
-                                                </Field>
-                                                {(touched.visitationType && errors.visitationType) ? (
-                                                    <p>{errors.visitationType}</p>
-                                                ) : null}
-                                                <br></br>
-                                                <Form.Label>Visit Date</Form.Label>
-                                                <Field type="date"
-                                                    name='voDate'
-                                                    className={"form-control " + (touched.voDate && errors.voDate ? 'is-invalid' : '')}
-                                                ></Field>
-                                                <br></br>
-                                                {(touched.voDate && errors.voDate) ?
-                                                    (<p>{errors.voDate}</p>) : null
-                                                }
                                             </Form.Group>
                                         </Form.Row>
                                         <Form.Row>

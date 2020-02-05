@@ -6,7 +6,7 @@ const PageTemplate = ({ children }) => (
     <div id="page-template">
         <Container>
             <Row id="logo-header">
-                <Col className="bg-primary"><span className="arrow"></span><h1><Link to="/">Chandler Care Center</Link></h1></Col>
+                <Col className="bg-primary pt-1"><span className="arrow"></span><h1><Link to="/">Chandler Care Center</Link></h1></Col>
             </Row>
             {children}
         </Container>
