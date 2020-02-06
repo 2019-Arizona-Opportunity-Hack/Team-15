@@ -13,26 +13,45 @@ class CustomerViewPage extends Component {
             vistsLeft: "",
             badrequest: false,
             loading: true,
-            visitId: ""
+            visitId: "",
+            verified: false
         }
+        this.getToken = this.getToken.bind(this);
     }
-
+    getToken() {
+        return localStorage.getItem('id_token');
+    }
     componentDidMount() {
-
-        fetch('/test.json').then(response => response.json())
-            .then((result) => {
-                let myarray = result.map(item => { return item; });
-                this.setState({
-                    familyName: myarray[0].familyName,
-                    visitedDate: myarray[0].visitedDate,
-                    vistsLeft: myarray[0].vistsLeft,
-                    vistsId: myarray[0].visitsID
-                });
+        let token = 'Bearer' + this.getToken();
+        let notverified = false;
+        fetch('https://localhost:4000', {
+            headers: new Headers({
+                'Authorization': token
             })
-        console.log("Component did mount went through");
-        this.setState({
-            loading: false
-        })
+        }).then(res => {
+            if (res.ok) {
+                let msg = res.json()
+                let user = msg[0];
+                this.setState({
+                    verified: true
+                })
+            }
+
+        }
+        )
+        if (notverified) {
+            fetch('/test.json').then(response => response.json())
+                .then((result) => {
+                    let myarray = result.map(item => { return item; });
+                    this.setState({
+                        familyName: myarray[0].familyName,
+                        visitedDate: myarray[0].visitedDate,
+                        vistsLeft: myarray[0].vistsLeft,
+                        vistsId: myarray[0].visitsID,
+                        loading: false
+                    });
+                });
+        }
     }
     render() {
         if (this.state.badrequest) {
@@ -71,6 +90,7 @@ class CustomerViewPage extends Component {
                             <Col>
                                 <p>User: {this.state.familyName}</p>
                                 <p>Visited Since: {this.state.visitedDate}</p>
+                                <p>Last Visit Type: {this.state.viistedType}</p>
                                 <p>Vists Left: 1</p>
                             </Col>
                         </Row>

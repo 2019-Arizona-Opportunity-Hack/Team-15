@@ -4,6 +4,36 @@ import {Link} from 'react-router-dom';
 import {FaHome} from 'react-icons/fa';
 
 export default class CustomerSplashScreen extends Component {
+
+
+    constructor(props){
+        super(props)
+        this.getToken = this.getToken.bind(this);
+    }
+    //get token if exists
+    getToken(){
+        return localStorage.getItem('id_token');
+    }
+    componentDidMount(){
+
+        let token = 'Bearer' + this.getToken();
+        fetch('https://localhost:4000',{
+            headers : new Headers({
+                'Authorization': token
+            })
+        }).then(res =>
+            {
+                if(res.ok){
+                    let msg = res.json()
+                    let user = msg[0];
+                    let path = "/user/" + user;
+                    this.props.history({
+                        pathname: path 
+                    })
+                }
+            }
+        );
+    }
     render() {
         return (
             <Container>

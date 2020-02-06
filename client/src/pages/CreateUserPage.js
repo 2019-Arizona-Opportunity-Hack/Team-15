@@ -5,7 +5,7 @@ import ThirdCreateFormScreen from '../components/ThirdCreateFormScreen'
 import FourCreateFormScreen from '../components/FourCreateFormScreen'
 import PageTemplate from './PageTemplate';
 import { Row, Col } from 'react-bootstrap';
-import { FaUserPlus, FaCheck } from 'react-icons/fa';
+import { FaUserPlus, FaCheck, FaTimes } from 'react-icons/fa';
 import SummaryScreen from '../components/SummaryScreen';
 
 const HOSTNAME = "http://localhost:5000/api";
@@ -24,9 +24,11 @@ export default class CreateUserPage extends Component {
             form4: {},
             currentSlideIndex: 0,
             returnCurrentSlide: {},
-            sendingData: false,
+            loadingResponseScreen: false,
+            sendingData: true,
+            succcesfulMessage: false,
+            responseReceived: false,
             sendingDataText: 'Sending Data...',
-            succesful: false,
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.handler = this.handler.bind(this);
@@ -34,6 +36,7 @@ export default class CreateUserPage extends Component {
         this.onCancel = this.onCancel.bind(this);
         this.addToParent = this.addToParent.bind(this);
         this.SwitchCard = this.SwitchCard.bind(this);
+        this.submitData = this.submitData.bind(this);
     }
     SwitchCard = (curIndex) => {
 
@@ -70,24 +73,11 @@ export default class CreateUserPage extends Component {
             pathname: "/login"
         })
     }
-
-    //on Submit
-    //show sending data at first
-    //show either error state
-    //show either succcesful state
-    onSubmit(event) {
-        event.preventDefault();
-
-        this.setState({
-            sendingData: true
-        });
-
+    //submit data
+    submitData() {
         let submitFormData = {
             formData: this.state.formData
         }
-        let messageResponse = this.state.sendingDataText;
-
-        console.log('Entered the submit data party');
         fetch(HOSTNAME + '/users', {
             method: 'POST',
             headers: {
@@ -95,31 +85,52 @@ export default class CreateUserPage extends Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(submitFormData)
-        }).then(res => res.json())
-            .then((respJson) => {
-                console.log(respJson);
-                this.props.history.push({
-                    pathname: "/login"
-                })
-            },
-                (error) => {
-                    messageResponse = 'Error while contacting server';
-                    console.log("error reached");
-                })
+        }).then((response) => {
+            if (!response.ok) {
+                throw Error("Server is not working");
+            }
+        }
+        )
             .then(
-                this.setState({
-                    sendingDataText: messageResponse
-                })
-            )
+                (jsonmsg) => {
+                    let msg = jsonmsg.json();
+                    //successful message
+                    let token = msg[0];
+                    let path = "/user/" + msg[1];
+                    localStorage.setItem('id_token', token);
 
-        console.log('show succesful')
+                    setTimeout(() => this.setState({
+                        succcesfulMessage: true,
+                        responseReceived: true,
+                        sendingData: false,
+                        sendingDataText: 'Successful!'
+                    }), 1000)
+                    setTimeout(() => this.props.history({
+                        pathname: path
+                    }), 2000)
+                }
+            )
+            .catch(error => {
+                //server error message or network issue
+                setTimeout(() => this.setState({
+                    succcesfulMessage: false,
+                    responseReceived: true,
+                    sendingData: false,
+                    sendingDataText: 'Server Issues'
+                }), 1000)
+
+                setTimeout(() => this.props.history.push("/"), 2000);
+            }
+            )
+    }
+    //start the submit process
+    onSubmit(event) {
+        event.preventDefault();
+
         this.setState({
-            successful: true,
-            sendingDataText: 'successful..'
+            loadingResponseScreen: true
         });
-        this.props.history.push({
-            pathname:"/user/jthomas"
-        });
+        setTimeout(() => this.submitData(), 3000);
     }
 
     //Handler Function for objects to be saved
@@ -140,35 +151,44 @@ export default class CreateUserPage extends Component {
 
         return (
             <PageTemplate>
-                <div id="black-screen" className={this.state.sendingData ? 'black-screen-activated' : 'black-screen-deactivated'}>
+
+                <div id="black-screen" className={this.state.loadingResponseScreen ? 'black-screen-activated' : 'black-screen-deactivated'}>
                     <div className="central-message">
-                        {this.state.successful ? (
-                            <span className="check-size">
-                                <FaCheck />
-                            </span>
+                        {(this.state.sendingData && !this.state.responseReceived) ? (
+                            <div className="sk-fading-circle">
+                                <div className="sk-circle1 sk-circle"></div>
+                                <div className="sk-circle2 sk-circle"></div>
+                                <div className="sk-circle3 sk-circle"></div>
+                                <div className="sk-circle4 sk-circle"></div>
+                                <div className="sk-circle5 sk-circle"></div>
+                                <div className="sk-circle6 sk-circle"></div>
+                                <div className="sk-circle7 sk-circle"></div>
+                                <div className="sk-circle8 sk-circle"></div>
+                                <div className="sk-circle9 sk-circle"></div>
+                                <div className="sk-circle10 sk-circle"></div>
+                                <div className="sk-circle11 sk-circle"></div>
+                                <div className="sk-circle12 sk-circle"></div>
+                            </div>
                         )
-                            : (
-                                <div className="sk-fading-circle">
-                                    <div className="sk-circle1 sk-circle"></div>
-                                    <div className="sk-circle2 sk-circle"></div>
-                                    <div className="sk-circle3 sk-circle"></div>
-                                    <div className="sk-circle4 sk-circle"></div>
-                                    <div className="sk-circle5 sk-circle"></div>
-                                    <div className="sk-circle6 sk-circle"></div>
-                                    <div className="sk-circle7 sk-circle"></div>
-                                    <div className="sk-circle8 sk-circle"></div>
-                                    <div className="sk-circle9 sk-circle"></div>
-                                    <div className="sk-circle10 sk-circle"></div>
-                                    <div className="sk-circle11 sk-circle"></div>
-                                    <div className="sk-circle12 sk-circle"></div>
-                                </div>
-                            )
+                            : null
+                        }
+                        {(!this.state.sendingData && this.state.responseReceived ? (
+                            (this.state.succcesfulMessage ?
+                                <span className="check-size">
+                                    <FaCheck />
+                                </span>
+                                :
+                                <span className="invalid-size">
+                                    <FaTimes />
+                                </span>
+                            )) : null)
+
                         }
                         <p>{this.state.sendingDataText}</p>
                     </div>
                 </div>
                 <Row>
-                    <Col className={"splash-screen " + (this.state.sendingData ? 'hidden-scroll-main ' : 'active-scroll')} >
+                    <Col className={"splash-screen " + (this.state.loadingResponseScreen ? 'hidden-scroll-main ' : 'active-scroll')} >
                         <Row>
                             <Col><h2 className="text-center"><FaUserPlus />  Registration</h2></Col>
                         </Row>

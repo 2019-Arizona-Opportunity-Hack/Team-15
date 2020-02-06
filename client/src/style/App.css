@@ -284,6 +284,10 @@ Spinner
   font-size:5.0em;
   color:green;
 }
+.invalid-size{
+  font-size:5.0em;
+  color:red;
+}
 
 .text-left{
   text-align: left;
